@@ -1,6 +1,5 @@
 use super::error::TFTPErrorCode;
 use serde::{Deserialize, Serialize};
-use std::io::Read;
 
 #[derive(Serialize, Deserialize)]
 pub enum OpCode {
@@ -34,11 +33,11 @@ impl RequestPacket {
 pub struct DataPacket<'a> {
     pub opcode: u16,
     pub block: u16,
-    pub data: &'a[u8],
+    pub data: &'a [u8],
 }
 
 impl<'a> DataPacket<'a> {
-    pub fn new(block: u16, data: &'a[u8] ) -> DataPacket {
+    pub fn new(block: u16, data: &'a [u8]) -> DataPacket {
         DataPacket {
             opcode: OpCode::Data as u16,
             block,
@@ -49,8 +48,8 @@ impl<'a> DataPacket<'a> {
 
 #[derive(Serialize, Deserialize)]
 pub struct AckPacket {
-    opcode: u16,
-    block: u16,
+    pub opcode: u16,
+    pub block: u16,
 }
 
 impl AckPacket {
