@@ -23,6 +23,7 @@ fn handle_read_request(socket: UdpSocket, origin: SocketAddr, buf: Vec<u8>) {
             break;
         }
 
+        // Slice of data, used when reading last bytes of file
         let data_packet = DataPacket::new(block, &buffer[..file_bytes_read]);
         let serialized = bincode::serialize(&data_packet).unwrap();
 
@@ -58,14 +59,15 @@ fn main() {
     let mut buf = vec![0; 64];
 
     // TODO: Send initial ACK packet
+    // Data is the initial ACK packet
     let (bytes_read, origin) = socket.recv_from(&mut buf).unwrap();
 
     // Set timeout for user
     socket.set_read_timeout(Some(std::time::Duration::from_secs(2))).unwrap();
 
-    if buf[0] == OpCode::ReadRequest as u8 {
+    if buf[0] == READREQUEST {
         handle_read_request(socket, origin, buf);
-    } else if buf[0] == OpCode::WriteRequest as u8 {
+    } else if buf[0] == WRITEREQUEST {
     }
 
 }
